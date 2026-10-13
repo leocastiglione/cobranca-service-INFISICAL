@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  runtime = "nodejs"
+  moduleFormat = "cjs"
+}
+ 
+datasource db {
+  provider = "mysql"
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Charge {
+  cobranca_id              BigInt          @id @default(autoincrement())
+  reserva_id               BigInt
+  cobranca_valor_base      Decimal         @db.Decimal(10, 2)
+  cobranca_valor_adicional Decimal?        @default(0.00) @db.Decimal(10, 2)
+  cobranca_valor_desconto  Decimal?        @db.Decimal(10, 2)
+  cobranca_valor_total     Decimal         @db.Decimal(10, 2)
+  cobranca_criado          DateTime        @default(now()) @db.DateTime(0)
+  cobranca_atualizado      DateTime        @updatedAt @db.DateTime(0)
+  cobranca_status          Int
+  item_cobranca            Charge_item[]
+  pagamento                Payment[]
+
+  @@map("cobranca")
+}
+
+model Charge_item {
+  item_cobranca_id             BigInt    @id @default(autoincrement())
+  cobranca_id                  BigInt
+  item_cobranca_tipo           Int
+  item_cobranca_descricao      String?   @db.VarChar(255)
+  item_cobranca_quantidade     Decimal?  @db.Decimal(10, 2)
+  item_cobranca_valor_unitario Decimal?  @db.Decimal(10, 2)
+  item_cobranca_valor_total    Decimal?  @db.Decimal(10, 2)
+  item_cobranca_criado         DateTime? @default(now()) @db.DateTime(0)
+  item_cobranca_status         Int?
+  cobranca                     Charge  @relation(fields: [cobranca_id], references: [cobranca_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_item_cobranca_cobranca")
+
+  @@index([cobranca_id], map: "fk_charge_idx")
+  @@map("item_cobranca")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Payment {
+  pagamento_id                   BigInt    @id @default(autoincrement())
+  usuario_id                     BigInt?
+  cobranca_id                    BigInt
+  pagamento_forma                Int?
+  pagamento_valor                Decimal?  @db.Decimal(10, 2)
+  pagamento_pago_em              DateTime? @db.DateTime(0)
+  pagamento_transacao_externa_id String?   @db.VarChar(150)
+  pagamento_criado               DateTime? @default(now()) @db.DateTime(0)
+  pagamento_status               Int?
+  cobranca                       Charge  @relation(fields: [cobranca_id], references: [cobranca_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pagamento_cobranca")
+
+  @@index([cobranca_id], map: "fk_charge_idx")
+  @@index([usuario_id], map: "usuario_id_idx")
+
+  @@map("pagamento")
+}
