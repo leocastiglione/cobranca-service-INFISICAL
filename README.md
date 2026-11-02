@@ -1,8 +1,15 @@
 
+CRIAÇÃO DE CREDENCIAL UNIVERSAL NO INFISICAL
+
+
+
+
+
+
 COMANDOS ANTES DE RODAR
 
 npm install
-
+npm run prisma:generate
 
 
 infisical login
