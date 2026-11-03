@@ -9,7 +9,10 @@ COPY src ./src
 COPY prisma ./prisma
 COPY prisma7.config.ts ./
 
-RUN npx prisma generate
+RUN --mount=type=secret,id=database_url \
+    export DATABASE_URL="$(cat /run/secrets/database_url)" && \
+    npx prisma generate
+
 
 RUN npm run build
 
