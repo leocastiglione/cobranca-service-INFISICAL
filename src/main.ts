@@ -48,6 +48,7 @@ function loadDockerSecrets() {
 };
 
 async function bootstrap(): Promise<void> {
+  loadDockerSecrets();
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
@@ -59,8 +60,7 @@ async function bootstrap(): Promise<void> {
   const config = app.get(ConfigService);
   const porta = config.get<number>('PORT', 3000);
   await app.listen(porta);
-  Logger.log(`API no ar em http:-/localhost:${porta}`, 'Bootstrap');
-  loadDockerSecrets();
+  Logger.log(`API no ar em http:-/localhost:${porta}`, 'Bootstrap');  
 }
 
 void bootstrap();
