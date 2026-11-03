@@ -11,6 +11,8 @@ function loadDockerSecrets() {
     { file: 'DB_USUARIO_SENHA_FILE', env: 'DB_USUARIO_SENHA' },
     { file: 'COBRANCA_FILE', env: 'COBRANCA' },
     { file: 'JWT_SECRET_FILE', env: 'JWT_SECRET' },
+    { file:'DATABASE_URL', env: 'DATABASE_URL'},
+    { file: 'JWT_SECRET', env:'JWT_SECRET'} 
   ];
 
   for (const secret of secrets) {
@@ -58,6 +60,7 @@ async function bootstrap(): Promise<void> {
   const porta = config.get<number>('PORT', 3000);
   await app.listen(porta);
   Logger.log(`API no ar em http:-/localhost:${porta}`, 'Bootstrap');
+  loadDockerSecrets();
 }
 
 void bootstrap();
