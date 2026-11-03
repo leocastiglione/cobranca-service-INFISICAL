@@ -6,13 +6,15 @@ import { HealthModule } from './health/health.module';
 import { PaymentModule } from './payment/payment.module';
 import { ChargeModule } from './charge/charge.module';
 import { ChargeItensModule } from './charge_itens/charge_itens.module';
+import secretsConfig from './config/secrets.config.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      validate: validateEnv,
+      load:[secretsConfig],
+      validate: validateEnv,      
     }),
     PrismaModule,
     HealthModule,

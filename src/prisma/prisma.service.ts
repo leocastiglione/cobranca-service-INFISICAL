@@ -15,9 +15,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
     constructor(config: ConfigService) {
         super({
-            adapter: new PrismaMariaDb(
-                paraUrlDoDriver(config.getOrThrow<string>('DATABASE_URL')),
-            ),            
+            adapter: new PrismaMariaDb({
+                host: config.getOrThrow<string>('DB_HOST'),
+                port: Number(config.get<string>('DB_PORT') || 3306),
+                user: config.getOrThrow<string>('DB_USUARIO'),
+                password: config.getOrThrow<string>('DB_USUARIO_SENHA'),
+                database: config.getOrThrow<string>('COBRANCA'),
+                connectionLimit: 5,
+        }),            
         });
     }
 

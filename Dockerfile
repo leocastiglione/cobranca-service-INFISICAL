@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /cobranca-service-INFISICAL
 
 COPY package*.json ./
@@ -9,14 +9,13 @@ COPY src ./src
 COPY prisma ./prisma
 COPY prisma7.config.ts ./
 
-RUN --mount=type=secret,id=database_url \
-    export DATABASE_URL="$(cat /run/secrets/database_url)" && \
+RUN DATABASE_URL="mysql://build:build@localhost:3306/build" \
     npx prisma generate
 
 
 RUN npm run build
 
-FROM node:22-alpine AS runtime
+FROM node:24-alpine AS runtime
 WORKDIR /cobranca-service-INFISICAL
 ENV NODE_ENV=production
 
