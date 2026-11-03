@@ -3,17 +3,18 @@ WORKDIR /cobranca-service-INFISICAL
 
 COPY package*.json ./
 RUN npm ci
-RUN npx prisma generate
-
-
 
 COPY tsconfig*.json ./
 COPY src ./src
+
+RUN npx prisma generate
 RUN npm run build
 
 FROM node:24-alpine AS runtime
 WORKDIR /cobranca-service-INFISICAL
 ENV NODE_ENV=production
+
+EXPOSE 8888
 
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
