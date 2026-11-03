@@ -2,17 +2,16 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-
 import { readFileSync } from 'fs';
 
-function loadDockerSecrets() {
+function loadDockerSecrets(): void {
   const secrets = [
     { file: 'DB_USUARIO_FILE', env: 'DB_USUARIO' },
     { file: 'DB_USUARIO_SENHA_FILE', env: 'DB_USUARIO_SENHA' },
     { file: 'COBRANCA_FILE', env: 'COBRANCA' },
     { file: 'JWT_SECRET_FILE', env: 'JWT_SECRET' },
-    { file:'DATABASE_URL', env: 'DATABASE_URL'},
-    { file: 'JWT_SECRET', env:'JWT_SECRET'} 
+    { file:'DATABASE_URL_FILE', env: 'DATABASE_URL'},
+    { file: 'JWT_SECRET_FILE', env:'JWT_SECRET'} 
   ];
 
   for (const secret of secrets) {
@@ -49,6 +48,7 @@ function loadDockerSecrets() {
 
 async function bootstrap(): Promise<void> {
   loadDockerSecrets();
+  const { AppModule } = await import('./app.module.js');
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
