@@ -1,8 +1,11 @@
-FROM node:24-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /cobranca-service-INFISICAL
 
 COPY package*.json ./
 RUN npm ci
+RUN npx prisma generate
+
+
 
 COPY tsconfig*.json ./
 COPY src ./src
