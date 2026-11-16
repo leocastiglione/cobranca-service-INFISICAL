@@ -1,0 +1,19 @@
+services:
+  hemovida-estoque:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: cobranca-service:latest
+
+    container_name: cobranca-service
+
+    ports:
+      - "7606:7606"
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+      PORT: "7606"
